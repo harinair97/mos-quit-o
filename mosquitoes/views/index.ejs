@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+
+    <style>
+            /* Always set the map height explicitly to define the size of the div
+             * element that contains the map. */
+            #map {
+              height: 100%;
+            }
+            /* Optional: Makes the sample page fill the window. */
+            html, body {
+              height: 100%;
+              margin: 0;
+              padding: 0;
+            }
+          </style>
+          <link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+          <link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js">
+          <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+</head>
+<body>
+
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                <!-- <a class="navbar-brand" href="#">Navbar</a> -->
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+                  <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                  <ul class="navbar-nav">
+                    <li class="nav-item dropdown">
+                      <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Request
+                      </a>
+                      <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                        <a id= "uae" class="dropdown-item" onclick="funct1(1) " > UAE</a>
+                        <a id= "Thailand"class="dropdown-item" onclick="funct1(2)" > Thailand</a>
+                        <a id= "Costa"class="dropdown-item" onclick="funct1(3)" > Costa Rica</a>
+
+
+                      </div>
+                    </li>
+                  </ul>
+              <ul class="navbar-nav">
+                <a href="/info" style="margin-right:20px;">About</a>
+                    </ul>
+              <ul class="navbar-nav">
+                  <a href="/predict">Predict disease</a>
+                </ul>
+                </div>
+              
+
+              </nav>
+    
+              <!--The div element for the map -->
+              <div id="map" ></div>
+              <script>
+              
+
+              </script>
+        
+              <script>
+            var la=0;
+            var lo=0;
+            var t2="";
+            function funct1(id)
+          {
+            if(id==1)
+            {   la=21.5544;
+                lo=39.18421;}
+            else if(id ==2)
+            {   la=8.6;
+                lo=99.96;  }
+            else 
+            {   la=-9.55;
+              lo=-76.15; }
+              $.post('/new',{la:la,lo:lo});
+              name()
+   
+         
+          // Initialize and add the map
+              
+                initMap()
+
+          }
+                //location.reload()
+
+               
+               async function name()
+                {
+                  var t1 = <%- obj.temperature %>;
+                var t3 = <%- obj.precipitation%>;
+                var t4 = <%- obj.mos %>
+                console.log("t1 :",t1);
+                console.log(t4)
+                 t2 = "Temperature : "+ t1.toString() + "degree Celsius";
+                t2 = t2 + "\n" + "Precipitation : "+t3.toString() + "inches";
+                  if(t4!=null)
+                  {
+                    t2 = t2+ "Mosquito count :"+t4+"million";
+                  }
+                console.log(t2);
+                console.log(typeof(t2))
+                console.log("ti :",t1)
+             
+              
+                }
+                name()
+                  
+           
+
+                
+
+          // Initialize and add the map
+
+          function initMap() {
+            // The location of Uluru
+        
+            var uluru = {lat:la, lng:lo };
+            // The map, centered at Uluru
+            var map = new google.maps.Map(
+                document.getElementById('map'), {zoom: 10, center: uluru});
+            // The marker, positioned at Uluru
+            var marker = new google.maps.Marker({position: uluru, map: map});
+           
+          
+            var infowindow = new google.maps.InfoWindow({         
+            content: t2
+            });
+          
+            marker.addListener('click', function() {
+            infowindow.open(map, marker);
+        });
+
+          }
+       
+              </script>
+           
+              <script async defer
+              src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCvAaogsW8U9WyxPjdBrGMEluyRMZEo4X4&callback=initMap">
+              </script>
+          
+</body>
+</html>
